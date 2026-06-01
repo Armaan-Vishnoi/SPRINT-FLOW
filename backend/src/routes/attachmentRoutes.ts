@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { authMiddleware } from "../middleware/authMiddleware";
 
-import { upload } from "../config/upload";
+import { upload } from "../config/cloudUpload";
 
 import {
   uploadAttachmentController,
@@ -13,7 +13,7 @@ import {
 
 const router = Router();
 
-// UPLOAD
+// ================= UPLOAD =================
 
 router.post(
   "/:taskId",
@@ -25,7 +25,7 @@ router.post(
   uploadAttachmentController,
 );
 
-// GET TASK FILES
+// ================= GET TASK FILES =================
 
 router.get(
   "/task/:taskId",
@@ -35,7 +35,7 @@ router.get(
   getAttachmentsController,
 );
 
-// DOWNLOAD
+// ================= DOWNLOAD =================
 
 router.get(
   "/download",
@@ -45,7 +45,7 @@ router.get(
   downloadAttachmentController,
 );
 
-// DELETE
+// ================= DELETE =================
 
 router.delete(
   "/:id",

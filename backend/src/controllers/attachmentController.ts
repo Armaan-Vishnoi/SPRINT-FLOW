@@ -1,5 +1,7 @@
 import { Response } from "express";
+import cloudinary from "../config/cloudinary";
 
+import fs from "fs";
 import {
   saveAttachment,
   getAttachments,
@@ -49,7 +51,11 @@ export const uploadAttachmentController = async (req: any, res: Response) => {
         message: "No file uploaded",
       });
     }
+    const uploadedFile = await cloudinary.uploader.upload(file.path, {
+      folder: "SprintFlow",
 
+      resource_type: "auto",
+    });
     const attachment = await saveAttachment({
       taskId: task._id,
 
@@ -57,15 +63,15 @@ export const uploadAttachmentController = async (req: any, res: Response) => {
 
       originalName: file.originalname,
 
-      fileName: file.filename,
+      fileName: uploadedFile.public_id,
 
-      path: file.path,
+      path: uploadedFile.secure_url,
 
       size: file.size,
 
       mimeType: file.mimetype,
     });
-
+    fs.unlinkSync(file.path);
     return res.status(201).json({
       success: true,
 
