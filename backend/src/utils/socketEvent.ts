@@ -1,42 +1,15 @@
-const recentEvents =
-new Set();
+const recentEvents = new Set();
 
+export const emitOnce = (key: string, callback: any) => {
+  if (recentEvents.has(key)) {
+    return;
+  }
 
+  recentEvents.add(key);
 
-export const emitOnce =
-(
-key:string,
-callback:any
-)=>{
+  callback();
 
-
-if(
-recentEvents.has(key)
-){
-
-return;
-
-}
-
-
-
-recentEvents.add(key);
-
-
-
-callback();
-
-
-
-setTimeout(
-()=>{
-
-recentEvents.delete(key);
-
-},
-1000
-);
-
-
-
+  setTimeout(() => {
+    recentEvents.delete(key);
+  }, 1000);
 };

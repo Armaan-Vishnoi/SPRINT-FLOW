@@ -8,16 +8,8 @@ import {
 
 const router = Router();
 
-router.post(
-  "/",
-  authMiddleware,
-  createProjectController
-);
+router.post("/", authMiddleware, createProjectController);
 
-router.get(
-  "/",
-  authMiddleware,
-  getProjectsController
-);
+router.get("/", authMiddleware, getProjectsController);
 
 export default router;

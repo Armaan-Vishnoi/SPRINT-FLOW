@@ -1,36 +1,15 @@
 import multer from "multer";
 
-
-const storage =
-multer.diskStorage({
-
-destination:(req,file,cb)=>{
-
-
-cb(
-null,
-"uploads/temp"
-);
-
-
-}
-
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/temp");
+  },
 });
 
+export const upload = multer({
+  storage,
 
-
-export const upload =
-multer({
-
-storage,
-
-
-limits:{
-
-fileSize:
-10 * 1024 * 1024
-
-}
-
-
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
 });

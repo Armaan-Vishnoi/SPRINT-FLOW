@@ -9,16 +9,8 @@ import {
 
 const router = Router();
 
-router.post(
-  "/",
-  authMiddleware,
-  createSprintController
-);
+router.post("/", authMiddleware, createSprintController);
 
-router.get(
-  "/:projectId",
-  authMiddleware,
-  getSprintsController
-);
+router.get("/:projectId", authMiddleware, getSprintsController);
 
 export default router;

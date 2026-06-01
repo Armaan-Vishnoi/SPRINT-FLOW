@@ -1,101 +1,66 @@
-import {Router} from "express";
+import { Router } from "express";
+
+import { uploadProfile } from "../middleware/uploadMiddleware";
+
+import { authMiddleware } from "../middleware/authMiddleware";
 
 import {
-uploadProfile
-} from "../middleware/uploadMiddleware";
-
-import {
-
-authMiddleware
-
-} from "../middleware/authMiddleware";
-
-
-import {
-
-updateProfileController,
-
-changePasswordController,
-
-deactivateAccountController,
-
-uploadProfileImageController,
-
-requestEmailChangeController,
-
-verifyEmailChangeController
-
+  updateProfileController,
+  changePasswordController,
+  deactivateAccountController,
+  uploadProfileImageController,
+  requestEmailChangeController,
+  verifyEmailChangeController,
 } from "../controllers/profileController";
 
-
-
-const router=Router();
+const router = Router();
 
 router.patch(
+  "/deactivate",
 
-"/deactivate",
+  authMiddleware,
 
-authMiddleware,
-
-deactivateAccountController
-
+  deactivateAccountController,
 );
 
 router.patch(
+  "/",
 
-"/",
+  authMiddleware,
 
-authMiddleware,
-
-updateProfileController
-
+  updateProfileController,
 );
 
 router.patch(
+  "/email",
 
-"/email",
+  authMiddleware,
 
-authMiddleware,
-
-requestEmailChangeController
-
+  requestEmailChangeController,
 );
-
-
 
 router.get(
+  "/verify-email/:token",
 
-"/verify-email/:token",
-
-verifyEmailChangeController
-
-);
-
-
-router.patch(
-
-"/image",
-
-authMiddleware,
-
-uploadProfile.single(
-"profile"
-),
-
-uploadProfileImageController
-
+  verifyEmailChangeController,
 );
 
 router.patch(
+  "/image",
 
-"/password",
+  authMiddleware,
 
-authMiddleware,
+  uploadProfile.single("profile"),
 
-changePasswordController
-
+  uploadProfileImageController,
 );
 
+router.patch(
+  "/password",
 
+  authMiddleware,
+
+  changePasswordController,
+);
 
 export default router;

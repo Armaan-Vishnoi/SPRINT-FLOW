@@ -1,174 +1,80 @@
-import Notification
-from "../models/Notification";
+import Notification from "../models/Notification";
 
-
-import {
-getIO
-} from "../socket/socket";
-
-
-
+import { getIO } from "../socket/socket";
 
 // CREATE + SOCKET SEND
 
+export const createNotification = async (data: any) => {
+  const notification = await Notification.create(data);
 
-export const createNotification =
-async(
-data:any
-)=>{
+  // realtime send
 
+  getIO().to(`user:${data.userId}`).emit(
+    "notification",
 
-const notification =
-await Notification.create(
-data
-);
+    notification,
+  );
 
-
-
-// realtime send
-
-getIO()
-.to(
-`user:${data.userId}`
-)
-.emit(
-
-"notification",
-
-notification
-
-);
-
-
-
-return notification;
-
-
+  return notification;
 };
-
-
-
 
 // GET MY NOTIFICATIONS
 
-export const getMyNotifications =
-async(
-userId:string
-)=>{
-
-
-return Notification.find({
-
-userId
-
-})
-.sort({
-
-createdAt:-1
-
-});
-
-
+export const getMyNotifications = async (userId: string) => {
+  return Notification.find({
+    userId,
+  }).sort({
+    createdAt: -1,
+  });
 };
-
-
-
-
 
 // MARK READ
 
-export const markRead =
-async(
-id:string,
-userId:string
-)=>{
+export const markRead = async (id: string, userId: string) => {
+  return Notification.findOneAndUpdate(
+    {
+      _id: id,
+      userId,
+    },
 
+    {
+      isRead: true,
+    },
 
-return Notification.findOneAndUpdate(
-
-{
-_id:id,
-userId
-},
-
-{
-isRead:true
-},
-
-{
-new:true
-}
-
-);
-
-
+    {
+      new: true,
+    },
+  );
 };
-
-
-
 
 // MARK ALL READ
 
-export const markAllRead =
-async(
-userId:string
-)=>{
+export const markAllRead = async (userId: string) => {
+  return Notification.updateMany(
+    {
+      userId,
+    },
 
-
-return Notification.updateMany(
-
-{
-userId
-},
-
-{
-isRead:true
-}
-
-);
-
-
+    {
+      isRead: true,
+    },
+  );
 };
-
-
-
 
 // DELETE ONE
 
-export const deleteNotification =
-async(
-id:string,
-userId:string
-)=>{
+export const deleteNotification = async (id: string, userId: string) => {
+  return Notification.deleteOne({
+    _id: id,
 
-
-return Notification.deleteOne({
-
-_id:id,
-
-userId
-
-});
-
-
+    userId,
+  });
 };
-
-
-
 
 // DELETE ALL
 
-export const clearNotifications =
-async(
-userId:string
-)=>{
-
-
-return Notification.deleteMany({
-
-userId
-
-});
-
-
+export const clearNotifications = async (userId: string) => {
+  return Notification.deleteMany({
+    userId,
+  });
 };

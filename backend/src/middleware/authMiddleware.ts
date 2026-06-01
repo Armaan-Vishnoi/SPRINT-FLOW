@@ -5,11 +5,10 @@ import User from "../models/User";
 export const authMiddleware = async (
   req: any,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
-    const authHeader =
-      req.headers.authorization;
+    const authHeader = req.headers.authorization;
 
     if (!authHeader) {
       return res.status(401).json({
@@ -18,17 +17,11 @@ export const authMiddleware = async (
       });
     }
 
-    const token =
-      authHeader.split(" ")[1];
+    const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    ) as any;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
 
-    const user = await User.findById(
-      decoded.userId
-    ).select("-password");
+    const user = await User.findById(decoded.userId).select("-password");
 
     if (!user) {
       return res.status(401).json({

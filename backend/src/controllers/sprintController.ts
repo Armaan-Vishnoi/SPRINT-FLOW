@@ -1,30 +1,14 @@
 import { Request, Response } from "express";
-import {
-  createSprint,
-  getSprints,
-} from "../services/sprintService";
+import { createSprint, getSprints } from "../services/sprintService";
 
-export const createSprintController = async (
-  req: Request,
-  res: Response
-) => {
+export const createSprintController = async (req: Request, res: Response) => {
   try {
-    const {
-      projectId,
-      name,
-      goal,
-      startDate,
-      endDate,
-    } = req.body;
+    const { projectId, name, goal, startDate, endDate } = req.body;
 
-    if (
-      new Date(endDate) <=
-      new Date(startDate)
-    ) {
+    if (new Date(endDate) <= new Date(startDate)) {
       return res.status(400).json({
         success: false,
-        message:
-          "End date must be after start date",
+        message: "End date must be after start date",
       });
     }
 
@@ -48,18 +32,11 @@ export const createSprintController = async (
   }
 };
 
-export const getSprintsController = async (
-  req: Request,
-  res: Response
-) => {
+export const getSprintsController = async (req: Request, res: Response) => {
   try {
-    const projectId = String(
-      req.params.projectId
-    );
+    const projectId = String(req.params.projectId);
 
-    const sprints = await getSprints(
-      projectId
-    );
+    const sprints = await getSprints(projectId);
 
     return res.status(200).json({
       success: true,

@@ -1,14 +1,14 @@
-import fs from "fs";
-
 import Attachment from "../models/Attachment";
 
-// SAVE FILE DATA
+import cloudinary from "../config/cloudinary";
+
+// ================= SAVE =================
 
 export const saveAttachment = async (data: any) => {
   return Attachment.create(data);
 };
 
-// GET TASK FILES
+// ================= GET =================
 
 export const getAttachments = async (taskId: string) => {
   return Attachment.find({
@@ -16,18 +16,26 @@ export const getAttachments = async (taskId: string) => {
   }).populate("uploadedBy", "name email");
 };
 
-// DELETE FILE
+// ================= DELETE =================
 
 export const removeAttachment = async (id: string) => {
   const file = await Attachment.findById(id);
 
   if (!file) {
-    throw new Error("File not found");
+    throw new Error("Attachment not found");
   }
 
-  if (fs.existsSync(file.path)) {
-    fs.unlinkSync(file.path);
-  }
+  // delete from cloudinary
+
+  await cloudinary.uploader.destroy(
+    file.fileName,
+
+    {
+      resource_type: "image",
+    },
+  );
+
+  // delete mongodb
 
   await file.deleteOne();
 

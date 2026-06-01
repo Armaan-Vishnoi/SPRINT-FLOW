@@ -2,10 +2,7 @@ import bcrypt from "bcrypt";
 
 export const comparePassword = async (
   password: string,
-  hashedPassword: string
+  hashedPassword: string,
 ): Promise<boolean> => {
-  return await bcrypt.compare(
-    password,
-    hashedPassword
-  );
+  return await bcrypt.compare(password, hashedPassword);
 };

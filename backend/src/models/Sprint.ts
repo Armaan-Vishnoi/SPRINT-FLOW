@@ -30,20 +30,13 @@ const sprintSchema = new Schema(
 
     status: {
       type: String,
-      enum: [
-        "PLANNED",
-        "ACTIVE",
-        "COMPLETED"
-      ],
+      enum: ["PLANNED", "ACTIVE", "COMPLETED"],
       default: "PLANNED",
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export default mongoose.model(
-  "Sprint",
-  sprintSchema
-);
+export default mongoose.model("Sprint", sprintSchema);

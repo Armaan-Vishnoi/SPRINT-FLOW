@@ -5,81 +5,74 @@ const userSchema = new Schema(
     name: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
 
     email: {
       type: String,
       required: true,
       unique: true,
-      lowercase: true
+      lowercase: true,
     },
 
     password: {
       type: String,
-      required: true
+      required: true,
     },
 
     role: {
       type: String,
-      enum: [
-        "PROJECT_MANAGER",
-        "DEVELOPER"
-      ],
-      default: "DEVELOPER"
+      enum: ["PROJECT_MANAGER", "DEVELOPER"],
+      default: "DEVELOPER",
     },
 
     profilePicture: {
       type: String,
-      default: ""
+      default: "",
     },
 
     phone: {
       type: String,
-      default: ""
+      default: "",
     },
 
     emailVerified: {
       type: Boolean,
-      default: false
+      default: false,
     },
 
     verificationToken: {
       type: String,
-      default: null
+      default: null,
     },
 
     resetPasswordToken: {
       type: String,
-      default: null
+      default: null,
     },
 
     resetPasswordExpires: {
       type: Date,
-      default: null
+      default: null,
     },
 
     isDeactivated: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    pendingEmail:{
- type:String,
- default:null
-},
+    pendingEmail: {
+      type: String,
+      default: null,
+    },
 
-
-emailChangeToken:{
- type:String,
- default:null
-}
+    emailChangeToken: {
+      type: String,
+      default: null,
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
-export default mongoose.model(
-  "User",
-  userSchema
-);
+export default mongoose.model("User", userSchema);

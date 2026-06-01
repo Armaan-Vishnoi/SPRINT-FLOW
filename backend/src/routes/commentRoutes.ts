@@ -1,42 +1,16 @@
-import {
-Router
-} from "express";
+import { Router } from "express";
 
-
-import {
-authMiddleware
-} from "../middleware/authMiddleware";
-
+import { authMiddleware } from "../middleware/authMiddleware";
 
 import {
-
-addCommentController,
-
-getCommentsController
-
+  addCommentController,
+  getCommentsController,
 } from "../controllers/commentController";
 
+const router = Router();
 
+router.post("/:taskId", authMiddleware, addCommentController);
 
-const router =
-Router();
-
-
-
-router.post(
-"/:taskId",
-authMiddleware,
-addCommentController
-);
-
-
-
-router.get(
-"/:taskId",
-authMiddleware,
-getCommentsController
-);
-
-
+router.get("/:taskId", authMiddleware, getCommentsController);
 
 export default router;

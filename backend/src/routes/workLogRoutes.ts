@@ -1,40 +1,19 @@
-import {Router} from "express";
+import { Router } from "express";
 
-
-import {
-authMiddleware
-} from "../middleware/authMiddleware";
-
+import { authMiddleware } from "../middleware/authMiddleware";
 
 import {
-createWorkLogController,
-updateWorkLogController,
-deleteWorkLogController
+  createWorkLogController,
+  updateWorkLogController,
+  deleteWorkLogController,
 } from "../controllers/workLogController";
 
+const router = Router();
 
+router.post("/", authMiddleware, createWorkLogController);
 
-const router=Router();
+router.patch("/:id", authMiddleware, updateWorkLogController);
 
-
-
-router.post(
-"/",
-authMiddleware,
-createWorkLogController
-);
-
-router.patch(
-"/:id",
-authMiddleware,
-updateWorkLogController
-);
-
-
-router.delete(
-"/:id",
-authMiddleware,
-deleteWorkLogController
-);
+router.delete("/:id", authMiddleware, deleteWorkLogController);
 
 export default router;

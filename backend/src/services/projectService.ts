@@ -1,77 +1,35 @@
 import Project from "../models/Project";
 
-
-
 // CREATE PROJECT
 
-export const createProject = async (
-  data:any
-)=>{
-
-
-return Project.create(
-data
-);
-
-
+export const createProject = async (data: any) => {
+  return Project.create(data);
 };
-
-
-
 
 // GET USER PROJECTS ONLY
 
-export const getProjects = async (
-userId:string
-)=>{
+export const getProjects = async (userId: string) => {
+  return Project.find({
+    members: userId,
+  })
 
+    .populate("manager", "name email")
 
-return Project.find({
-
-members:userId
-
-})
-
-.populate(
-"manager",
-"name email"
-)
-
-.populate(
-"members",
-"name email"
-);
-
-
+    .populate("members", "name email");
 };
-
-
-
 
 // CHECK PROJECT MEMBER
 
-export const isProjectMember =
-async(
+export const isProjectMember = async (
+  projectId: string,
 
-projectId:string,
+  userId: string,
+) => {
+  const project = await Project.findOne({
+    _id: projectId,
 
-userId:string
+    members: userId,
+  });
 
-)=>{
-
-
-const project =
-await Project.findOne({
-
-_id:projectId,
-
-members:userId
-
-});
-
-
-
-return !!project;
-
-
+  return !!project;
 };
