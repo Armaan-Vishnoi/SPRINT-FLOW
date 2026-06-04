@@ -27,7 +27,7 @@ app.get(
     });
   },
 );
-app.use(cors());
+
 app.use(express.json());
 app.use(
   "/uploads",
@@ -38,11 +38,9 @@ app.use(
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://sprintflow-frontend-llur.onrender.com"],
+    origin: ["http://localhost:5173", "https://your-vercel-url.vercel.app"],
 
     credentials: true,
-
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   }),
 );
 app.use(errorHandler);
