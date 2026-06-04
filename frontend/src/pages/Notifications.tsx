@@ -163,28 +163,7 @@ flex-wrap
 gap-3
 "
           >
-            <button
-              onClick={toggleEmail}
-              className={`
-
-px-5
-py-3
-rounded-xl
-
-font-bold
-
-duration-300
-
-${
-  emailNotification
-    ? "bg-green-600 shadow-lg shadow-green-600/30"
-    : "bg-gray-700"
-}
-
-`}
-            >
-              Email {emailNotification ? "ON" : "OFF"}
-            </button>
+            
 
             <button
               onClick={readAll}
