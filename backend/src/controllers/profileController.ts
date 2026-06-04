@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { v2 as cloudinary } from "cloudinary";
 
 import {
   updateProfile,
@@ -61,23 +62,31 @@ export const changePasswordController = async (req: any, res: Response) => {
   }
 };
 
-export const uploadProfileImageController = async (req: any, res: Response) => {
+export const uploadProfileImageController = async (req: any, res: any) => {
   try {
-    const user = await updateProfileImage(
-      req.user._id,
+    if (!req.file) {
+      return res.status(400).json({
+        message: "No image",
+      });
+    }
 
-      req.file.path,
-    );
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "profiles",
+    });
+
+    req.user.profilePicture = result.secure_url;
+
+    await req.user.save();
 
     return res.json({
       success: true,
 
-      user,
+      image: result.secure_url,
     });
   } catch (error: any) {
-    console.log("LOGIN ERROR:", error);
+    console.log("IMAGE UPLOAD ERROR:", error);
 
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
 
       message: error.message,
