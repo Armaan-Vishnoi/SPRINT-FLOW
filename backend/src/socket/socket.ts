@@ -7,7 +7,9 @@ const activeUsers = new Map<string, string>();
 export const initSocket = (server: any) => {
   io = new Server(server, {
     cors: {
-      origin: "*",
+      origin: ["http://localhost:5173", "https://sprintflow-frontend-llur.onrender.com"],
+
+      methods: ["GET", "POST"],
     },
   });
 

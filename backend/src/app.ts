@@ -38,9 +38,11 @@ app.use(
 
 app.use(
   cors({
-    origin: "*",
+    origin: ["http://localhost:5173", "https://sprintflow-frontend-llur.onrender.com"],
 
     credentials: true,
+
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   }),
 );
 app.use(errorHandler);
