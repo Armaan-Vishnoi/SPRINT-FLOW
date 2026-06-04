@@ -171,12 +171,11 @@ relative
             >
               <img
                 src={
-                  user?.profilePicture
-                    ? `http://localhost:5000/${String(
-                        user.profilePicture,
-                      ).replaceAll("\\", "/")}`
-                    : "/default.png"
+                  user?.profilePicture ? user.profilePicture : "/default.png"
                 }
+                onError={(e: any) => {
+                  e.currentTarget.src = "/default.png";
+                }}
                 className="
 w-20
 h-20
@@ -189,7 +188,6 @@ border-blue-500
 shadow-lg
 "
               />
-
               <span
                 className="
 absolute

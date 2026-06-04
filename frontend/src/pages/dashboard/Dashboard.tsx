@@ -3,21 +3,25 @@ import { useEffect, useState } from "react";
 import { getDashboardStats } from "../../api/dashboardApi";
 
 import StatCard from "../../components/dashboard/StatCard";
-import LoadingScreen from "../../components/LoadingScreen";
+
 export default function Dashboard() {
   const [stats, setStats] = useState<any>(null);
 
   const load = async () => {
-    const res = await getDashboardStats();
+    try {
+      const res = await getDashboardStats();
 
-    setStats(res.stats);
+      setStats(res.stats);
+    } catch (error) {
+      console.log("Dashboard error", error);
+    }
   };
 
   useEffect(() => {
     load();
   }, []);
 
-  if (!stats) return <LoadingScreen text="Preparing dashboard..." />;
+  if (!stats)
   {
     return (
       <div

@@ -1,0 +1,18 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useState } from "react";
+import toast from "react-hot-toast";
+export default function CreateProjectModal({ onClose, onCreate, }) {
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    function submit() {
+        if (!name.trim()) {
+            toast.error("Project name is required 📝");
+            return;
+        }
+        onCreate({
+            name,
+            description,
+        });
+    }
+    return (_jsx("div", { className: "\r\nfixed\r\ninset-0\r\nbg-black/70\r\nbackdrop-blur-md\r\nflex\r\nitems-center\r\njustify-center\r\nz-50\r\npx-5\r\n", children: _jsxs("div", { className: "\r\nrelative\r\nw-full\r\nmax-w-lg\r\nbg-gray-900\r\nborder\r\nborder-gray-800\r\nrounded-3xl\r\np-6\r\nsm:p-8\r\nshadow-2xl\r\n", children: [_jsxs("div", { className: "\r\nflex\r\njustify-between\r\nitems-start\r\nmb-8\r\n", children: [_jsxs("div", { children: [_jsx("h1", { className: "\r\ntext-2xl\r\nsm:text-3xl\r\nfont-black\r\nbg-gradient-to-r\r\nfrom-green-400\r\nto-blue-500\r\nbg-clip-text\r\ntext-transparent\r\n", children: "Create Project" }), _jsx("p", { className: "\r\ntext-gray-400\r\ntext-sm\r\nmt-2\r\n", children: "Start a new SprintFlow workspace" })] }), _jsx("button", { onClick: onClose, className: "\r\nw-10\r\nh-10\r\nrounded-xl\r\nbg-gray-800\r\nhover:bg-red-600\r\nduration-300\r\n", children: "\u2715" })] }), _jsxs("div", { className: "\r\nspace-y-5\r\n", children: [_jsxs("div", { children: [_jsx("label", { className: "\r\ntext-sm\r\ntext-gray-400\r\n", children: "Project Name" }), _jsx("input", { value: name, onChange: (e) => setName(e.target.value), placeholder: "Example: Website Redesign", className: "\r\nmt-2\r\nw-full\r\nbg-gray-800\r\nborder\r\nborder-gray-700\r\nrounded-xl\r\np-4\r\noutline-none\r\nfocus:border-green-500\r\nfocus:scale-[1.02]\r\nduration-300\r\ntext-white\r\n" })] }), _jsxs("div", { children: [_jsx("label", { className: "\r\ntext-sm\r\ntext-gray-400\r\n", children: "Description" }), _jsx("textarea", { value: description, onChange: (e) => setDescription(e.target.value), placeholder: "Describe project goals and details...", className: "\r\nmt-2\r\nw-full\r\nh-32\r\nresize-none\r\nbg-gray-800\r\nborder\r\nborder-gray-700\r\nrounded-xl\r\np-4\r\noutline-none\r\nfocus:border-green-500\r\nfocus:scale-[1.02]\r\nduration-300\r\ntext-white\r\n" })] })] }), _jsxs("div", { className: "\r\ngrid\r\ngrid-cols-1\r\nsm:grid-cols-2\r\ngap-4\r\nmt-8\r\n", children: [_jsx("button", { onClick: submit, className: "\r\npy-4\r\nrounded-xl\r\nfont-bold\r\nbg-gradient-to-r\r\nfrom-green-600\r\nto-blue-600\r\nhover:scale-105\r\nduration-300\r\nshadow-lg\r\nshadow-green-600/30\r\n", children: "Create Project \uD83D\uDE80" }), _jsx("button", { onClick: onClose, className: "\r\npy-4\r\nrounded-xl\r\nfont-bold\r\nbg-gray-800\r\nhover:bg-gray-700\r\nduration-300\r\n", children: "Cancel" })] })] }) }));
+}
