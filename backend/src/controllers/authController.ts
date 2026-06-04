@@ -54,6 +54,8 @@ export const register = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
+    console.log("LOGIN DEPLOY ERROR:", error);
+
     return res.status(500).json({
       success: false,
 
@@ -112,6 +114,8 @@ export const login = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
+    console.log("LOGIN DEPLOY ERROR:", error);
+
     return res.status(500).json({
       success: false,
 
@@ -134,7 +138,9 @@ export const forgotPassword = async (req: Request, res: Response) => {
       link: `http://localhost:5173/reset-password/${token}`,
     });
   } catch (error: any) {
-    return res.status(400).json({
+    console.log("LOGIN DEPLOY ERROR:", error);
+
+    return res.status(500).json({
       success: false,
 
       message: error.message,
@@ -158,7 +164,9 @@ export const resetPassword = async (req: Request, res: Response) => {
       message: "Password changed successfully",
     });
   } catch (error: any) {
-    return res.status(400).json({
+    console.log("LOGIN DEPLOY ERROR:", error);
+
+    return res.status(500).json({
       success: false,
 
       message: error.message,
