@@ -1,11 +1,19 @@
-6a1d10c3131bda7300cf2f66
+6a1d70d61f098f27ccb85d1e
 
-6a1d113c131bda7300cf2f67
+6a1d712b1f098f27ccb85d1f
 
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTFiYzdjN2UzMmNlNjE2NjAzMmZmNGUiLCJpYXQiOjE3ODAyMDYyNTAsImV4cCI6MTc4MDgxMTA1MH0.5uJ4gVv1qfWmFOTmL7fNIElVWRi7q-1290XzX6BMpI8
+{
+"title":"Cloudinary Upload Task",
 
-6a1d19dbeeaba3aae9fda787
+"description":"Testing image upload",
 
-6a1d4279c487035007507d66
+"projectId":"6a1d70d61f098f27ccb85d1e",
 
-6a1d4279c487035007507d67
+"sprintId":"6a1d712b1f098f27ccb85d1f",
+
+"assignee":"6a1d6a26a944513e3bd33b3d",
+
+"priority":"HIGH",
+
+"dueDate":"2026-06-20"
+}
