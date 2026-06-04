@@ -1,34 +1,33 @@
 import multer from "multer";
+import fs from "fs";
 import path from "path";
+
+const uploadPath = path.join(process.cwd(), "uploads/profiles");
+
+// create folder automatically
+
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, {
+    recursive: true,
+  });
+}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/profiles");
+    cb(null, uploadPath);
   },
 
   filename: (req, file, cb) => {
-    const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(
+      null,
 
-    cb(null, unique + path.extname(file.originalname));
+      Date.now() + "-" + file.originalname,
+    );
   },
 });
 
-const fileFilter = (req: any, file: any, cb: any) => {
-  const allowed = ["image/png", "image/jpg", "image/jpeg"];
-
-  if (allowed.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Unsupported image format"));
-  }
-};
-
-export const uploadProfile = multer({
+const upload = multer({
   storage,
-
-  limits: {
-    fileSize: 2 * 1024 * 1024,
-  },
-
-  fileFilter,
 });
+
+export default upload;
