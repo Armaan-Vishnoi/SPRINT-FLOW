@@ -23,7 +23,9 @@ export const updateProfileController = async (req: any, res: Response) => {
       user,
     });
   } catch (error: any) {
-    return res.status(400).json({
+    console.log("LOGIN ERROR:", error);
+
+    return res.status(500).json({
       success: false,
 
       message: error.message,
@@ -49,7 +51,9 @@ export const changePasswordController = async (req: any, res: Response) => {
       message: "Password updated",
     });
   } catch (error: any) {
-    return res.status(400).json({
+    console.log("LOGIN ERROR:", error);
+
+    return res.status(500).json({
       success: false,
 
       message: error.message,
@@ -71,7 +75,9 @@ export const uploadProfileImageController = async (req: any, res: Response) => {
       user,
     });
   } catch (error: any) {
-    return res.status(400).json({
+    console.log("LOGIN ERROR:", error);
+
+    return res.status(500).json({
       success: false,
 
       message: error.message,
@@ -91,7 +97,9 @@ export const deactivateAccountController = async (req: any, res: Response) => {
       user,
     });
   } catch (error: any) {
-    return res.status(400).json({
+    console.log("LOGIN ERROR:", error);
+
+    return res.status(500).json({
       success: false,
 
       message: error.message,
@@ -115,7 +123,9 @@ export const requestEmailChangeController = async (req: any, res: Response) => {
       link: result.link,
     });
   } catch (error: any) {
-    return res.status(400).json({
+    console.log("LOGIN ERROR:", error);
+
+    return res.status(500).json({
       success: false,
 
       message: error.message,
@@ -135,7 +145,9 @@ export const verifyEmailChangeController = async (req: any, res: Response) => {
       user,
     });
   } catch (error: any) {
-    return res.status(400).json({
+    console.log("LOGIN ERROR:", error);
+
+    return res.status(500).json({
       success: false,
 
       message: error.message,
