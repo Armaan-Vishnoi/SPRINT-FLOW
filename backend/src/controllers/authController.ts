@@ -12,15 +12,13 @@ import {
   findUserByEmail,
   createUser,
   checkUserActive,
+  createPasswordResetToken,
+  resetUserPassword,
 } from "../services/authService";
 
-// ================= REGISTER =================
+// REGISTER
 
-export const register = async (
-  req: Request,
-
-  res: Response,
-) => {
+export const register = async (req: Request, res: Response) => {
   try {
     const validatedData = registerSchema.parse(req.body);
 
@@ -64,13 +62,9 @@ export const register = async (
   }
 };
 
-// ================= LOGIN =================
+// LOGIN
 
-export const login = async (
-  req: Request,
-
-  res: Response,
-) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -84,17 +78,15 @@ export const login = async (
       });
     }
 
-    // deactivate check
-
     checkUserActive(user);
 
-    const isMatch = await comparePassword(
+    const match = await comparePassword(
       password,
 
       user.password,
     );
 
-    if (!isMatch) {
+    if (!match) {
       return res.status(400).json({
         success: false,
 
@@ -104,7 +96,7 @@ export const login = async (
 
     const token = generateToken(user._id.toString());
 
-    return res.status(200).json({
+    return res.json({
       success: true,
 
       token,
@@ -121,6 +113,52 @@ export const login = async (
     });
   } catch (error: any) {
     return res.status(500).json({
+      success: false,
+
+      message: error.message,
+    });
+  }
+};
+
+// FORGOT PASSWORD
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const token = await createPasswordResetToken(req.body.email);
+
+    return res.json({
+      success: true,
+
+      message: "Reset link generated",
+
+      link: `http://localhost:5173/reset-password/${token}`,
+    });
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+
+      message: error.message,
+    });
+  }
+};
+
+// RESET PASSWORD
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    await resetUserPassword(
+      String(req.params.token),
+
+      req.body.password,
+    );
+
+    return res.json({
+      success: true,
+
+      message: "Password changed successfully",
+    });
+  } catch (error: any) {
+    return res.status(400).json({
       success: false,
 
       message: error.message,

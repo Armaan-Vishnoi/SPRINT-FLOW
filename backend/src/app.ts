@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
 import authRoutes from "./routes/authRoutes";
 import profileRoutes from "./routes/profileRoutes";
 import projectRoutes from "./routes/projectRoutes";
@@ -11,7 +12,8 @@ import commentRoutes from "./routes/commentRoutes";
 import notificationRoutes from "./routes/notificationRoutes";
 import attachmentRoutes from "./routes/attachmentRoutes";
 import { errorHandler } from "./middleware/errorMiddleware";
-
+import userRoutes from "./routes/userRoutes";
+import dashboardRoutes from "./routes/dashboardRoutes";
 import { limiter, securityHeaders, sanitize } from "./config/security";
 const app = express();
 app.get(
@@ -27,7 +29,11 @@ app.get(
 );
 app.use(cors());
 app.use(express.json());
+app.use(
+  "/uploads",
 
+  express.static(path.join(process.cwd(), "uploads")),
+);
 // SECURITY
 
 app.use(
@@ -38,7 +44,7 @@ app.use(
 app.use(errorHandler);
 app.use(securityHeaders);
 
-app.use(limiter);
+//app.use(limiter);
 
 app.use(sanitize);
 app.use("/api/profile", profileRoutes);
@@ -51,7 +57,7 @@ app.use("/api/user/profile", profileManageRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/attachments", attachmentRoutes);
-
+app.use("/api/dashboard", dashboardRoutes);
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -59,4 +65,9 @@ app.get("/", (req, res) => {
   });
 });
 
+app.use(
+  "/api/users",
+
+  userRoutes,
+);
 export default app;

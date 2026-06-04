@@ -1,13 +1,17 @@
 import Notification from "../models/Notification";
 
+import User from "../models/User";
+
 import { getIO } from "../socket/socket";
 
-// CREATE + SOCKET SEND
+import { sendEmail } from "./emailService";
+
+// CREATE NOTIFICATION
 
 export const createNotification = async (data: any) => {
   const notification = await Notification.create(data);
 
-  // realtime send
+  // SOCKET REALTIME
 
   getIO().to(`user:${data.userId}`).emit(
     "notification",
@@ -15,10 +19,24 @@ export const createNotification = async (data: any) => {
     notification,
   );
 
+  // EMAIL CHECK
+
+  const user = await User.findById(data.userId);
+
+  if (user && user.emailNotification === true) {
+    await sendEmail(
+      user.email,
+
+      data.title,
+
+      data.message,
+    );
+  }
+
   return notification;
 };
 
-// GET MY NOTIFICATIONS
+// GET
 
 export const getMyNotifications = async (userId: string) => {
   return Notification.find({
@@ -34,6 +52,7 @@ export const markRead = async (id: string, userId: string) => {
   return Notification.findOneAndUpdate(
     {
       _id: id,
+
       userId,
     },
 
@@ -47,7 +66,27 @@ export const markRead = async (id: string, userId: string) => {
   );
 };
 
-// MARK ALL READ
+// MARK UNREAD
+
+export const markUnread = async (id: string, userId: string) => {
+  return Notification.findOneAndUpdate(
+    {
+      _id: id,
+
+      userId,
+    },
+
+    {
+      isRead: false,
+    },
+
+    {
+      new: true,
+    },
+  );
+};
+
+// MARK ALL
 
 export const markAllRead = async (userId: string) => {
   return Notification.updateMany(

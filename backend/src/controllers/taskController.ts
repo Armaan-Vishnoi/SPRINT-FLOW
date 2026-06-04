@@ -10,6 +10,7 @@ import {
   createSubTask,
   updateTaskStatus,
   deleteTask,
+  findTaskById,
 } from "../services/taskService";
 
 import { emitOnce } from "../utils/socketEvent";
@@ -27,6 +28,7 @@ export const createTaskController = async (req: any, res: Response) => {
       assignee,
       priority,
       dueDate,
+      dependencies,
     } = req.body;
 
     if (dueDate && new Date(dueDate) < new Date()) {
@@ -38,12 +40,20 @@ export const createTaskController = async (req: any, res: Response) => {
 
     const task = await createTask({
       title,
+
       description,
+
       projectId,
+
       sprintId,
+
       assignee,
+
       priority,
+
       dueDate,
+
+      dependencies: dependencies || [],
 
       createdBy: req.user._id,
     });
@@ -215,7 +225,25 @@ export const addDependencyController = async (req: any, res: Response) => {
     });
   }
 };
+// ================ GET TASK DETAIL ================
 
+export const getTaskDetailController = async (req: any, res: Response) => {
+  try {
+    const task = await findTaskById(req.params.taskId);
+
+    return res.json({
+      success: true,
+
+      task,
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      success: false,
+
+      message: error.message,
+    });
+  }
+};
 // ================= DELETE TASK =================
 
 export const deleteTaskController = async (req: any, res: Response) => {

@@ -3,11 +3,11 @@ import { Response } from "express";
 import {
   getMyNotifications,
   markRead,
+  markUnread,
   markAllRead,
   deleteNotification,
   clearNotifications,
 } from "../services/notificationService";
-
 // GET NOTIFICATIONS
 
 export const getNotificationsController = async (req: any, res: Response) => {
@@ -106,6 +106,30 @@ export const clearNotificationsController = async (req: any, res: Response) => {
       success: true,
 
       message: "Notifications cleared",
+    });
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+
+      message: error.message,
+    });
+  }
+};
+
+// MARK UNREAD
+
+export const markUnreadController = async (req: any, res: Response) => {
+  try {
+    const notification = await markUnread(
+      req.params.id,
+
+      req.user._id,
+    );
+
+    return res.json({
+      success: true,
+
+      notification,
     });
   } catch (error: any) {
     return res.status(400).json({

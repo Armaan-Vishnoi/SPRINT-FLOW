@@ -8,6 +8,7 @@ import {
   markAllReadController,
   deleteNotificationController,
   clearNotificationsController,
+  markUnreadController,
 } from "../controllers/notificationController";
 
 const router = Router();
@@ -33,3 +34,12 @@ router.delete("/:id", authMiddleware, deleteNotificationController);
 router.delete("/", authMiddleware, clearNotificationsController);
 
 export default router;
+// UNREAD ONE
+
+router.patch(
+  "/:id/unread",
+
+  authMiddleware,
+
+  markUnreadController,
+);

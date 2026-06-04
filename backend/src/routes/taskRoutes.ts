@@ -9,6 +9,7 @@ import {
   updateTaskStatusController,
   addDependencyController,
   deleteTaskController,
+  getTaskDetailController,
 } from "../controllers/taskController";
 
 const router = Router();
@@ -31,7 +32,13 @@ router.post(
 
   addDependencyController,
 );
+router.get(
+  "/details/:taskId",
 
+  authMiddleware,
+
+  getTaskDetailController,
+);
 // get sprint tasks
 
 router.get("/:sprintId", authMiddleware, getTasksController);

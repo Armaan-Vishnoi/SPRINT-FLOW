@@ -5,16 +5,18 @@ dotenv.config();
 import http from "http";
 
 import app from "./app";
-
+import { startTaskReminderJob } from "./jobs/taskReminderJob";
 import { connectDB } from "./config/db";
 
+
 import { initSocket } from "./socket/socket";
+
 
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   await connectDB();
-
+startTaskReminderJob();
   const server = http.createServer(app);
 
   initSocket(server);

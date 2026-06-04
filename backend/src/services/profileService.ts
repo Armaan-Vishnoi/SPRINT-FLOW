@@ -8,7 +8,10 @@ export const updateProfile = async (userId: string, data: any) => {
 
     {
       name: data.name,
+
       phone: data.phone,
+
+      emailNotification: data.emailNotification,
     },
 
     {

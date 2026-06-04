@@ -64,7 +64,10 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-
+    emailNotification: {
+      type: Boolean,
+      default: false,
+    },
     emailChangeToken: {
       type: String,
       default: null,

@@ -21,17 +21,37 @@ export const createTask = async (data: any) => {
 export const getTasks = async (sprintId: string) => {
   return Task.find({
     sprintId,
+
     parentTask: null,
   })
+
     .populate("assignee", "name email")
+
     .populate("createdBy", "name email")
+
+    .populate("dependencies", "title status")
+
     .populate("subtasks");
 };
 
 // ================= FIND TASK =================
 
 export const findTaskById = async (id: string) => {
-  return Task.findById(id);
+  const task = await Task.findById(id)
+
+    .populate("assignee", "name email")
+
+    .populate("createdBy", "name email")
+
+    .populate("subtasks")
+
+    .populate("dependencies");
+
+  if (!task) {
+    throw new Error("Task not found");
+  }
+
+  return task;
 };
 
 // ================= CREATE SUBTASK =================
@@ -70,72 +90,50 @@ export const createSubTask = async (parentId: string, data: any) => {
 
 // ================= UPDATE STATUS =================
 
-export const updateTaskStatus = async (
-  taskId: string,
-
-  status: TaskStatus,
-) => {
+export const updateTaskStatus = async (taskId: string, status: TaskStatus) => {
   const task = await Task.findById(taskId)
 
-    .populate("subtasks")
+    .populate({
+      path: "subtasks",
+      model: "Task",
+    })
 
-    .populate("dependencies");
+    .populate({
+      path: "dependencies",
+      model: "Task",
+    });
 
   if (!task) {
     throw new Error("Task not found");
   }
 
-  // parent completion check
+  // DEPENDENCY CHECK
 
-  if (status === "DONE") {
-    const incompleteSubtasks = task.subtasks.filter(
-      (subtask: any) => subtask.status !== "DONE",
-    );
-
-    if (incompleteSubtasks.length > 0) {
-      throw new Error(
-        "Complete all subtasks before marking parent task as DONE",
-      );
-    }
-  }
-
-  // dependency blocking check
-
-  if (status === "IN_PROGRESS") {
-    const incompleteDependencies = task.dependencies.filter(
+  if (status === "IN_PROGRESS" || status === "DONE") {
+    const pendingDependencies = task.dependencies.filter(
       (dep: any) => dep.status !== "DONE",
     );
 
-    if (incompleteDependencies.length > 0) {
-      throw new Error("Complete blocking tasks before starting this task");
+    if (pendingDependencies.length > 0) {
+      throw new Error("Complete dependency tasks first");
+    }
+  }
+
+  // SUBTASK CHECK
+
+  if (status === "DONE") {
+    const pendingSubtasks = task.subtasks.filter(
+      (sub: any) => sub.status !== "DONE",
+    );
+
+    if (pendingSubtasks.length > 0) {
+      throw new Error("Complete subtasks first");
     }
   }
 
   task.status = status;
 
   await task.save();
-
-  // NOTIFY BLOCKED TASK OWNERS
-
-  if (status === "DONE") {
-    const blockedTasks = await Task.find({
-      dependencies: task._id,
-    });
-
-    for (const blockedTask of blockedTasks) {
-      await createNotification({
-        userId: blockedTask.assignee,
-
-        title: "Blocking Task Completed",
-
-        message: `You can now start: ${blockedTask.title}`,
-
-        type: "DEPENDENCY_DONE",
-
-        relatedId: blockedTask._id,
-      });
-    }
-  }
 
   return task;
 };
