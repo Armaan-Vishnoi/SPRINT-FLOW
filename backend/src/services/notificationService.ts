@@ -6,33 +6,73 @@ import { getIO } from "../socket/socket";
 
 import { sendEmail } from "./emailService";
 
-// CREATE NOTIFICATION
+// ================= CREATE NOTIFICATION =================
 
 export const createNotification = async (data: any) => {
   const notification = await Notification.create(data);
 
-  // realtime notification
-  getIO().to(`user:${data.userId}`).emit("notification", notification);
+  // GET REAL UNREAD COUNT
 
-  // email should NOT block API response
+  const unreadCount = await Notification.countDocuments({
+    userId: data.userId,
+
+    isRead: false,
+  });
+
+  // REALTIME SOCKET NOTIFICATION
+
+  getIO().to(`user:${data.userId}`).emit(
+    "notification",
+
+    {
+      notification,
+
+      unreadCount,
+    },
+  );
+
+  // EMAIL BACKGROUND
+
   setImmediate(async () => {
     try {
       const user = await User.findById(data.userId);
-      console.log("EMAIL CHECK:", user?.email, user?.emailNotification);
-      if (user && user.emailNotification) {
-        await sendEmail(user.email, data.title, data.message);
 
-        console.log("EMAIL SENT:", user.email);
+      console.log(
+        "EMAIL CHECK:",
+
+        user?.email,
+
+        user?.emailNotification,
+      );
+
+      if (user && user.emailNotification) {
+        await sendEmail(
+          user.email,
+
+          data.title,
+
+          data.message,
+        );
+
+        console.log(
+          "EMAIL SENT:",
+
+          user.email,
+        );
       }
     } catch (error: any) {
-      console.log("EMAIL ERROR:", error.message);
+      console.log(
+        "EMAIL ERROR:",
+
+        error.message,
+      );
     }
   });
 
   return notification;
 };
 
-// GET
+// ================= GET =================
 
 export const getMyNotifications = async (userId: string) => {
   return Notification.find({
@@ -42,9 +82,13 @@ export const getMyNotifications = async (userId: string) => {
   });
 };
 
-// MARK READ
+// ================= MARK READ =================
 
-export const markRead = async (id: string, userId: string) => {
+export const markRead = async (
+  id: string,
+
+  userId: string,
+) => {
   return Notification.findOneAndUpdate(
     {
       _id: id,
@@ -57,14 +101,18 @@ export const markRead = async (id: string, userId: string) => {
     },
 
     {
-      new: true,
+      returnDocument: "after",
     },
   );
 };
 
-// MARK UNREAD
+// ================= MARK UNREAD =================
 
-export const markUnread = async (id: string, userId: string) => {
+export const markUnread = async (
+  id: string,
+
+  userId: string,
+) => {
   return Notification.findOneAndUpdate(
     {
       _id: id,
@@ -77,12 +125,12 @@ export const markUnread = async (id: string, userId: string) => {
     },
 
     {
-      new: true,
+      returnDocument: "after",
     },
   );
 };
 
-// MARK ALL
+// ================= MARK ALL READ =================
 
 export const markAllRead = async (userId: string) => {
   return Notification.updateMany(
@@ -96,9 +144,13 @@ export const markAllRead = async (userId: string) => {
   );
 };
 
-// DELETE ONE
+// ================= DELETE ONE =================
 
-export const deleteNotification = async (id: string, userId: string) => {
+export const deleteNotification = async (
+  id: string,
+
+  userId: string,
+) => {
   return Notification.deleteOne({
     _id: id,
 
@@ -106,7 +158,7 @@ export const deleteNotification = async (id: string, userId: string) => {
   });
 };
 
-// DELETE ALL
+// ================= CLEAR ALL =================
 
 export const clearNotifications = async (userId: string) => {
   return Notification.deleteMany({
