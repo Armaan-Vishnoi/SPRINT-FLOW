@@ -19,8 +19,6 @@ export const createNotification = async (data: any) => {
     isRead: false,
   });
 
-  // REALTIME SOCKET NOTIFICATION
-
   getIO().to(`user:${data.userId}`).emit(
     "notification",
 
@@ -30,7 +28,11 @@ export const createNotification = async (data: any) => {
       unreadCount,
     },
   );
-
+  console.log(
+    "SENDING NOTIFICATION SOCKET TO:",
+    `user:${data.userId}`,
+    unreadCount,
+  );
   // EMAIL BACKGROUND
 
   setImmediate(async () => {
