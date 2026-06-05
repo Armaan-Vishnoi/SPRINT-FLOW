@@ -18,7 +18,7 @@ export const createNotification = async (data: any) => {
   setImmediate(async () => {
     try {
       const user = await User.findById(data.userId);
-
+      console.log("EMAIL CHECK:", user?.email, user?.emailNotification);
       if (user && user.emailNotification) {
         await sendEmail(user.email, data.title, data.message);
 
