@@ -10,67 +10,66 @@ export const initSocket = (server: any) => {
       origin: [
         "http://localhost:5173",
         "https://sprintflow-plum.vercel.app",
-        "https://sprintflow-git-main-armaan-vishnoi-s-projects.vercel.app/",
+        "https://sprintflow-git-main-armaan-vishnoi-s-projects.vercel.app",
       ],
 
       methods: ["GET", "POST"],
+
+      credentials: true,
     },
   });
 
   io.on("connection", (socket) => {
     console.log("SOCKET CONNECTED:", socket.id);
 
-    // DEBUG ONLY
+    // DEBUG
     socket.onAny((event, data) => {
       console.log("EVENT RECEIVED:", event);
 
       console.log("DATA:", data);
     });
 
-    // JOIN USER ROOM
-    socket.on(
-      "join-user",
+    // ======================
+    // USER ROOM
+    // ======================
 
-      (userId) => {
-        socket.join(`user:${userId}`);
+    socket.on("join-user", (userId) => {
+      socket.join(`user:${userId}`);
 
-        console.log("USER ROOM:", userId);
-      },
-    );
+      activeUsers.set(socket.id, userId);
 
-    // JOIN PROJECT
+      console.log("USER JOINED ROOM:", `user:${userId}`);
+    });
 
-    socket.on(
-      "join-project",
+    // ======================
+    // PROJECT ROOM
+    // ======================
 
-      (data) => {
-        if (typeof data === "string") {
-          data = JSON.parse(data);
-        }
+    socket.on("join-project", (data) => {
+      if (typeof data === "string") {
+        data = JSON.parse(data);
+      }
 
-        const { projectId, userId } = data;
+      const { projectId } = data;
 
-        const room = `project:${projectId}`;
+      const room = `project:${projectId}`;
 
-        socket.join(room);
+      socket.join(room);
 
-        activeUsers.set(socket.id, userId);
+      console.log("PROJECT ROOM:", room);
 
-        io.to(room).emit(
-          "active-users",
+      io.to(room).emit(
+        "active-users",
 
-          Array.from(activeUsers.values()),
-        );
-      },
-    );
+        Array.from(activeUsers.values()),
+      );
+    });
 
-    socket.on(
-      "disconnect",
+    socket.on("disconnect", () => {
+      console.log("SOCKET DISCONNECTED:", socket.id);
 
-      () => {
-        activeUsers.delete(socket.id);
-      },
-    );
+      activeUsers.delete(socket.id);
+    });
   });
 
   return io;
