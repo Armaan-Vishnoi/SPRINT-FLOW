@@ -7,7 +7,7 @@ const activeUsers = new Map<string, string>();
 export const initSocket = (server: any) => {
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:5173", "https://sprintflow-plum.vercel.app"],
+      origin: ["http://localhost:5173", "https://sprintflow-plum.vercel.app", "https://sprintflow-git-main-armaan-vishnoi-s-projects.vercel.app/"],
 
       methods: ["GET", "POST"],
     },

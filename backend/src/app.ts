@@ -25,7 +25,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://sprintflow-plum.vercel.app"],
+    origin: ["http://localhost:5173", "https://sprintflow-plum.vercel.app", "https://sprintflow-git-main-armaan-vishnoi-s-projects.vercel.app/"],
 
     credentials: true,
   }),
