@@ -11,27 +11,19 @@ import { sendEmail } from "./emailService";
 export const createNotification = async (data: any) => {
   const notification = await Notification.create(data);
 
-  // SOCKET REALTIME
+  // realtime notification
+  getIO().to(`user:${data.userId}`).emit("notification", notification);
 
-  getIO().to(`user:${data.userId}`).emit(
-    "notification",
-
-    notification,
-  );
-
-  // EMAIL CHECK
-
-  const user = await User.findById(data.userId);
-
-  if (user && user.emailNotification === true) {
-    await sendEmail(
-      user.email,
-
-      data.title,
-
-      data.message,
-    );
-  }
+  // email should NOT block API response
+  User.findById(data.userId)
+    .then((user) => {
+      if (user && user.emailNotification === true) {
+        return sendEmail(user.email, data.title, data.message);
+      }
+    })
+    .catch((err) => {
+      console.log("EMAIL ERROR:", err.message);
+    });
 
   return notification;
 };
