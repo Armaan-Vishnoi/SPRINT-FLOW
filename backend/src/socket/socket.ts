@@ -7,7 +7,11 @@ const activeUsers = new Map<string, string>();
 export const initSocket = (server: any) => {
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:5173", "https://sprintflow-plum.vercel.app", "https://sprintflow-git-main-armaan-vishnoi-s-projects.vercel.app/"],
+      origin: [
+        "http://localhost:5173",
+        "https://sprintflow-plum.vercel.app",
+        "https://sprintflow-git-main-armaan-vishnoi-s-projects.vercel.app/",
+      ],
 
       methods: ["GET", "POST"],
     },
@@ -16,23 +20,23 @@ export const initSocket = (server: any) => {
   io.on("connection", (socket) => {
     console.log("SOCKET CONNECTED:", socket.id);
 
-    // TEST EVERY EVENT
-
+    // DEBUG ONLY
     socket.onAny((event, data) => {
       console.log("EVENT RECEIVED:", event);
 
       console.log("DATA:", data);
-
-      socket.on(
-        "join-user",
-
-        (userId) => {
-          socket.join(`user:${userId}`);
-
-          console.log("USER ROOM:", userId);
-        },
-      );
     });
+
+    // JOIN USER ROOM
+    socket.on(
+      "join-user",
+
+      (userId) => {
+        socket.join(`user:${userId}`);
+
+        console.log("USER ROOM:", userId);
+      },
+    );
 
     // JOIN PROJECT
 
@@ -40,9 +44,6 @@ export const initSocket = (server: any) => {
       "join-project",
 
       (data) => {
-        console.log("JOIN PROJECT CALLED");
-
-        // Postman sends string sometimes
         if (typeof data === "string") {
           data = JSON.parse(data);
         }
@@ -53,8 +54,6 @@ export const initSocket = (server: any) => {
 
         socket.join(room);
 
-        console.log("JOINED ROOM:", room);
-
         activeUsers.set(socket.id, userId);
 
         io.to(room).emit(
@@ -64,13 +63,14 @@ export const initSocket = (server: any) => {
         );
       },
     );
-    // DISCONNECT
 
-    socket.on("disconnect", () => {
-      console.log("SOCKET DISCONNECTED:", socket.id);
+    socket.on(
+      "disconnect",
 
-      activeUsers.delete(socket.id);
-    });
+      () => {
+        activeUsers.delete(socket.id);
+      },
+    );
   });
 
   return io;

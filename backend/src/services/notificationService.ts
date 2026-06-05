@@ -15,15 +15,19 @@ export const createNotification = async (data: any) => {
   getIO().to(`user:${data.userId}`).emit("notification", notification);
 
   // email should NOT block API response
-  User.findById(data.userId)
-    .then((user) => {
-      if (user && user.emailNotification === true) {
-        return sendEmail(user.email, data.title, data.message);
+  setImmediate(async () => {
+    try {
+      const user = await User.findById(data.userId);
+
+      if (user && user.emailNotification) {
+        await sendEmail(user.email, data.title, data.message);
+
+        console.log("EMAIL SENT:", user.email);
       }
-    })
-    .catch((err) => {
-      console.log("EMAIL ERROR:", err.message);
-    });
+    } catch (error: any) {
+      console.log("EMAIL ERROR:", error.message);
+    }
+  });
 
   return notification;
 };
