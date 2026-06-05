@@ -19,15 +19,9 @@ export const createNotification = async (data: any) => {
     isRead: false,
   });
 
-  getIO().to(`user:${data.userId}`).emit(
-    "notification",
-
-    {
-      notification,
-
-      unreadCount,
-    },
-  );
+  getIO().emit("notification", {
+    userId: String(data.userId),
+  });
   console.log(
     "SENDING NOTIFICATION SOCKET TO:",
     `user:${data.userId}`,
