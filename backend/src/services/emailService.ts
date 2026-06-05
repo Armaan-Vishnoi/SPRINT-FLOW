@@ -1,31 +1,14 @@
-import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-
-  port: 465,
-
-  secure: true,
-
-  family: 4,
-
-  auth: {
-    user: process.env.EMAIL_USER,
-
-    pass: process.env.EMAIL_PASS,
-  },
-
-  connectionTimeout: 10000,
-} as SMTPTransport.Options);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (
   to: string,
   subject: string,
   message: string,
 ) => {
-  await transporter.sendMail({
-    from: `SprintFlow <${process.env.EMAIL_USER}>`,
+  const result = await resend.emails.send({
+    from: "SprintFlow <onboarding@resend.dev>",
 
     to,
 
@@ -33,12 +16,12 @@ export const sendEmail = async (
 
     html: `
 
- <h2>SprintFlow Notification</h2>
+   <h2>SprintFlow Notification</h2>
 
- <p>${message}</p>
+   <p>${message}</p>
 
- `,
+   `,
   });
 
-  console.log("EMAIL SENT SUCCESS");
+  console.log("EMAIL RESULT:", result);
 };
