@@ -1,11 +1,13 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: "74.125.130.108",
 
   port: 587,
 
   secure: false,
+
+  requireTLS: true,
 
   auth: {
     user: process.env.EMAIL_USER,
@@ -16,13 +18,11 @@ const transporter = nodemailer.createTransport({
 
 export const sendEmail = async (
   to: string,
-
   subject: string,
-
   message: string,
 ) => {
   await transporter.sendMail({
-    from: `"SprintFlow" <${process.env.EMAIL_USER}>`,
+    from: `SprintFlow <${process.env.EMAIL_USER}>`,
 
     to,
 
@@ -30,16 +30,12 @@ export const sendEmail = async (
 
     html: `
 
-      <div>
+  <h2>SprintFlow Notification</h2>
 
-        <h2>SprintFlow Notification</h2>
+  <p>${message}</p>
 
-        <p>${message}</p>
-
-      </div>
-
-    `,
+  `,
   });
 
-  console.log("MAIL SENT TO:", to);
+  console.log("EMAIL SENT:", to);
 };
