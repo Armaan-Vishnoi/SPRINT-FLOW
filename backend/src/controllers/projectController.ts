@@ -1,6 +1,10 @@
 import { Response } from "express";
 import Project from "../models/Project";
-import { createProject, getProjects } from "../services/projectService";
+import {
+  createProject,
+  getProjects,
+  deleteProject,
+} from "../services/projectService";
 
 // CREATE PROJECT
 
@@ -105,4 +109,22 @@ export const addMemberController = async (req: any, res: any) => {
 
     project,
   });
+};
+
+// DELETE PROJECT
+
+export const deleteProjectController = async (req: any, res: Response) => {
+  try {
+    await deleteProject(req.params.id, req.user._id);
+
+    return res.json({
+      success: true,
+      message: "Project deleted successfully",
+    });
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };

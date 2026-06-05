@@ -33,3 +33,18 @@ export const isProjectMember = async (
 
   return !!project;
 };
+
+export const deleteProject = async (projectId: string, userId: string) => {
+  const project = await Project.findOne({
+    _id: projectId,
+    manager: userId,
+  });
+
+  if (!project) {
+    throw new Error("Project not found or permission denied");
+  }
+
+  await project.deleteOne();
+
+  return true;
+};

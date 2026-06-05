@@ -23,5 +23,4 @@ export const sendEmail = async (
    `,
   });
 
-  console.log("EMAIL RESULT:", result);
 };
