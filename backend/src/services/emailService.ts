@@ -1,20 +1,23 @@
 import nodemailer from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 const transporter = nodemailer.createTransport({
-  host: "74.125.130.108",
+  host: "smtp.gmail.com",
 
-  port: 587,
+  port: 465,
 
-  secure: false,
+  secure: true,
 
-  requireTLS: true,
+  family: 4,
 
   auth: {
     user: process.env.EMAIL_USER,
 
     pass: process.env.EMAIL_PASS,
   },
-});
+
+  connectionTimeout: 10000,
+} as SMTPTransport.Options);
 
 export const sendEmail = async (
   to: string,
@@ -30,12 +33,12 @@ export const sendEmail = async (
 
     html: `
 
-  <h2>SprintFlow Notification</h2>
+ <h2>SprintFlow Notification</h2>
 
-  <p>${message}</p>
+ <p>${message}</p>
 
-  `,
+ `,
   });
 
-  console.log("EMAIL SENT:", to);
+  console.log("EMAIL SENT SUCCESS");
 };
