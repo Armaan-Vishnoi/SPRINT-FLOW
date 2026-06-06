@@ -40,7 +40,7 @@ Backend:
 ![Sprint Board](screenshots/subtask.png)
 
 ## Real-Time Notifications
-![Notifications](screenshots/notifications.png)
+![Notifications](screenshots/notification.png)
 
 ## Profile page
 ![Profile page](screenshots/profile.png)
