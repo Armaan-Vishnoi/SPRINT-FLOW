@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { getIO } from "../socket/socket";
 
 import { createNotification } from "../services/notificationService";
-
+import Task from "../models/Task";
 import {
   createTask,
   getTasks,
@@ -19,6 +19,7 @@ import { addDependency } from "../services/dependencyService";
 // ================= CREATE TASK =================
 
 export const createTaskController = async (req: any, res: Response) => {
+  
   try {
     const {
       title,
