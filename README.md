@@ -28,7 +28,7 @@ Backend:
 ![Dashboard](screenshots/dashboard.png)
 
 ## Project Management
-![Projects](screenshots/projects.png)
+![Projects](screenshots/project.png)
 
 ## Sprint Board
 ![Sprint Board](screenshots/sprint.png)
