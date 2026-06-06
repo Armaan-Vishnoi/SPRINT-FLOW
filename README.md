@@ -410,6 +410,7 @@ Cloudinary
 
 # Author
 
-Developed by **Prem Vishnoi**
+Developed by **Armaan Vishnoi**
+(nick name : Prem)
 
 Full Stack Developer | AI/ML Enthusiast
