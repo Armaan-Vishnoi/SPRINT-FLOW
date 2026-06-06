@@ -33,11 +33,23 @@ Backend:
 ## Sprint Board
 ![Sprint Board](screenshots/sprint.png)
 
+## Task Board
+![Task Board](screenshots/task.png)
+
+## Subtask Board
+![Sprint Board](screenshots/subtask.png)
+
 ## Real-Time Notifications
 ![Notifications](screenshots/notifications.png)
 
+## Profile page
+![Profile page](screenshots/profile.png)
+
 ## Email Notification
 ![Email](screenshots/email.png)
+
+## Email Notification to assigend member
+![Sprint Board](screenshots/email-to-assigned-member.png)
 
 ---
 
