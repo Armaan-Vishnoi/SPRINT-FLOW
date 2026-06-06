@@ -26,6 +26,15 @@ export default function Notifications() {
         load();
         loadProfile();
     }, []);
+    useEffect(() => {
+        const update = () => {
+            load();
+        };
+        socket.on("notification", update);
+        return () => {
+            socket.off("notification", update);
+        };
+    }, []);
     const readOne = async (id) => {
         await markRead(id);
         load();
@@ -65,21 +74,7 @@ export default function Notifications() {
     };
     if (loading)
         return _jsx(LoadingScreen, { text: "Fetching notifications..." });
-    return (_jsxs("div", { className: "\r\nspace-y-8\r\n", children: [_jsx("div", { className: "\r\nbg-gradient-to-br\r\nfrom-gray-900\r\nto-gray-950\r\nborder\r\nborder-gray-800\r\nrounded-3xl\r\np-6\r\n", children: _jsxs("div", { className: "\r\nflex\r\nflex-col\r\nxl:flex-row\r\njustify-between\r\ngap-6\r\n", children: [_jsxs("div", { children: [_jsx("h1", { className: "\r\ntext-3xl\r\nsm:text-4xl\r\nfont-black\r\nbg-gradient-to-r\r\nfrom-blue-400\r\nto-purple-500\r\nbg-clip-text\r\ntext-transparent\r\n", children: "Notifications" }), _jsx("p", { className: "\r\ntext-gray-400\r\nmt-2\r\n", children: "Manage workspace alerts and updates \uD83D\uDD14" })] }), _jsxs("div", { className: "\r\nflex\r\nflex-wrap\r\ngap-3\r\n", children: [_jsxs("button", { onClick: toggleEmail, className: `
-
-px-5
-py-3
-rounded-xl
-
-font-bold
-
-duration-300
-
-${emailNotification
-                                        ? "bg-green-600 shadow-lg shadow-green-600/30"
-                                        : "bg-gray-700"}
-
-`, children: ["Email ", emailNotification ? "ON" : "OFF"] }), _jsx("button", { onClick: readAll, className: "\r\npx-5\r\npy-3\r\nrounded-xl\r\nfont-bold\r\nbg-blue-600\r\nhover:scale-105\r\nduration-300\r\n", children: "Read All" }), _jsx("button", { onClick: clearAll, className: "\r\npx-5\r\npy-3\r\nrounded-xl\r\nfont-bold\r\nbg-red-600\r\nhover:scale-105\r\nduration-300\r\n", children: "Clear All" })] })] }) }), items.length === 0 && (_jsx("div", { className: "\r\nbg-gray-900\r\nborder\r\nborder-gray-800\r\nrounded-3xl\r\np-12\r\ntext-center\r\ntext-gray-500\r\n", children: "\uD83D\uDD15 No notifications available" })), _jsx("div", { className: "\r\nspace-y-5\r\n", children: items.map((n) => (_jsx("div", { className: `
+    return (_jsxs("div", { className: "\r\nspace-y-8\r\n", children: [_jsx("div", { className: "\r\nbg-gradient-to-br\r\nfrom-gray-900\r\nto-gray-950\r\nborder\r\nborder-gray-800\r\nrounded-3xl\r\np-6\r\n", children: _jsxs("div", { className: "\r\nflex\r\nflex-col\r\nxl:flex-row\r\njustify-between\r\ngap-6\r\n", children: [_jsxs("div", { children: [_jsx("h1", { className: "\r\ntext-3xl\r\nsm:text-4xl\r\nfont-black\r\nbg-gradient-to-r\r\nfrom-blue-400\r\nto-purple-500\r\nbg-clip-text\r\ntext-transparent\r\n", children: "Notifications" }), _jsx("p", { className: "\r\ntext-gray-400\r\nmt-2\r\n", children: "Manage workspace alerts and updates \uD83D\uDD14" })] }), _jsxs("div", { className: "\r\nflex\r\nflex-wrap\r\ngap-3\r\n", children: [_jsx("button", { onClick: readAll, className: "\r\npx-5\r\npy-3\r\nrounded-xl\r\nfont-bold\r\nbg-blue-600\r\nhover:scale-105\r\nduration-300\r\n", children: "Read All" }), _jsx("button", { onClick: clearAll, className: "\r\npx-5\r\npy-3\r\nrounded-xl\r\nfont-bold\r\nbg-red-600\r\nhover:scale-105\r\nduration-300\r\n", children: "Clear All" })] })] }) }), items.length === 0 && (_jsx("div", { className: "\r\nbg-gray-900\r\nborder\r\nborder-gray-800\r\nrounded-3xl\r\np-12\r\ntext-center\r\ntext-gray-500\r\n", children: "\uD83D\uDD15 No notifications available" })), _jsx("div", { className: "\r\nspace-y-5\r\n", children: items.map((n) => (_jsx("div", { className: `
 
 group
 

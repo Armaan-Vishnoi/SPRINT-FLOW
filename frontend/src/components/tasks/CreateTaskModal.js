@@ -9,7 +9,10 @@ export default function CreateTaskModal({ onClose, onCreate, members, tasks, }) 
         dependency: "",
     });
     console.log("MODAL TASKS:", tasks);
-    const submit = () => {
+    const [creating, setCreating] = useState(false);
+    const submit = async () => {
+        if (creating)
+            return;
         if (!form.title) {
             toast.error("Task title is required 📝");
             return;
@@ -18,7 +21,8 @@ export default function CreateTaskModal({ onClose, onCreate, members, tasks, }) 
             toast.error("Please assign a team member 👤");
             return;
         }
-        onCreate({
+        setCreating(true);
+        await onCreate({
             title: form.title,
             description: form.description,
             assignee: form.assignee,
@@ -37,5 +41,5 @@ export default function CreateTaskModal({ onClose, onCreate, members, tasks, }) 
                                     }), className: "\r\nmt-2\r\nw-full\r\nbg-gray-800\r\nborder\r\nborder-gray-700\r\nrounded-xl\r\np-4\r\noutline-none\r\nfocus:border-blue-500\r\nduration-300\r\ntext-white\r\n", children: [_jsx("option", { value: "", children: "Select Team Member" }), members?.map((u) => (_jsx("option", { value: u._id, children: u.name }, u._id)))] })] }), _jsxs("div", { children: [_jsx("label", { className: "text-gray-400 text-sm", children: "Task Dependency" }), _jsxs("select", { value: form.dependency, onChange: (e) => setForm({
                                         ...form,
                                         dependency: e.target.value,
-                                    }), className: "\r\nmt-2\r\nw-full\r\nbg-gray-800\r\nborder\r\nborder-gray-700\r\nrounded-xl\r\np-4\r\noutline-none\r\nfocus:border-purple-500\r\nduration-300\r\ntext-white\r\n", children: [_jsx("option", { value: "", children: "No Dependency" }), tasks?.map((task) => (_jsx("option", { value: task._id, children: task.title }, task._id)))] })] })] }), _jsx("div", { className: "\r\nmt-6\r\nbg-purple-500/10\r\nborder\r\nborder-purple-500/30\r\nrounded-2xl\r\np-4\r\ntext-purple-300\r\ntext-sm\r\n", children: "\uD83D\uDD17 Dependencies block this task until the selected task is completed." }), _jsxs("div", { className: "\r\ngrid\r\ngrid-cols-1\r\nsm:grid-cols-2\r\ngap-4\r\nmt-8\r\n", children: [_jsx("button", { onClick: submit, className: "\r\npy-4\r\nrounded-xl\r\nfont-bold\r\nbg-gradient-to-r\r\nfrom-blue-600\r\nto-purple-600\r\nhover:scale-105\r\nduration-300\r\nshadow-lg\r\nshadow-blue-600/30\r\n", children: "Create Task \uD83D\uDE80" }), _jsx("button", { onClick: onClose, className: "\r\npy-4\r\nrounded-xl\r\nfont-bold\r\nbg-gray-800\r\nhover:bg-gray-700\r\nduration-300\r\n", children: "Cancel" })] })] }) }));
+                                    }), className: "\r\nmt-2\r\nw-full\r\nbg-gray-800\r\nborder\r\nborder-gray-700\r\nrounded-xl\r\np-4\r\noutline-none\r\nfocus:border-purple-500\r\nduration-300\r\ntext-white\r\n", children: [_jsx("option", { value: "", children: "No Dependency" }), tasks?.map((task) => (_jsx("option", { value: task._id, children: task.title }, task._id)))] })] })] }), _jsx("div", { className: "\r\nmt-6\r\nbg-purple-500/10\r\nborder\r\nborder-purple-500/30\r\nrounded-2xl\r\np-4\r\ntext-purple-300\r\ntext-sm\r\n", children: "\uD83D\uDD17 Dependencies block this task until the selected task is completed." }), _jsxs("div", { className: "\r\ngrid\r\ngrid-cols-1\r\nsm:grid-cols-2\r\ngap-4\r\nmt-8\r\n", children: [_jsx("button", { disabled: creating, onClick: submit, className: "\r\npy-4\r\nrounded-xl\r\nfont-bold\r\nbg-gradient-to-r\r\nfrom-blue-600\r\nto-purple-600\r\nhover:scale-105\r\nduration-300\r\nshadow-lg\r\nshadow-blue-600/30\r\n", children: "Create Task \uD83D\uDE80" }), _jsx("button", { onClick: onClose, className: "\r\npy-4\r\nrounded-xl\r\nfont-bold\r\nbg-gray-800\r\nhover:bg-gray-700\r\nduration-300\r\n", children: "Cancel" })] })] }) }));
 }

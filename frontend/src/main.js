@@ -5,5 +5,4 @@ import { Toaster } from "react-hot-toast";
 import App from "./App";
 import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
-import SocketProvider from "./socket/SocketProvider";
-ReactDOM.createRoot(document.getElementById("root")).render(_jsx(BrowserRouter, { children: _jsx(AuthProvider, { children: _jsxs(SocketProvider, { children: [_jsx(App, {}), _jsx(Toaster, { position: "top-right" })] }) }) }));
+ReactDOM.createRoot(document.getElementById("root")).render(_jsx(BrowserRouter, { children: _jsxs(AuthProvider, { children: [_jsx(App, {}), _jsx(Toaster, { position: "top-right" })] }) }));

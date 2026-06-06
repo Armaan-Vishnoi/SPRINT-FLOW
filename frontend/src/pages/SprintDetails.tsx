@@ -41,7 +41,11 @@ export default function SprintDetails() {
 
       const list = res.tasks || res.data || res.task || [];
 
-      setTasks(list);
+      const unique = Array.from(
+        new Map(list.map((task: any) => [task._id, task])).values(),
+      );
+
+      setTasks(unique);
     } finally {
       setLoading(false);
     }
@@ -57,91 +61,79 @@ export default function SprintDetails() {
     load();
 
     loadProject();
-  }, []);
+  }, [sprintId]);
 
   useEffect(() => {
     if (!projectId || !user) return;
 
-    socket.emit(
-      "join-project",
+    const userId = user._id || user.id;
 
-      {
-        projectId,
+    socket.emit("join-project", {
+      projectId,
+      userId,
+    });
 
-        userId: user._id || user.id,
-      },
-    );
+    const reload = async () => {
+      console.log("SOCKET TASK RELOAD");
 
-    const handleCreate = (task: any) => {
-      setTasks((prev) => [task, ...prev]);
+      const res = await getSprintTasks(sprintId!);
+
+      const list = res.tasks || [];
+
+      // HARD REPLACE STATE
+      setTasks([...list]);
     };
 
-    const handleUpdate = (task: any) => {
-      setTasks((prev) => prev.map((t) => (t._id === task._id ? task : t)));
-    };
+    socket.off("task-created");
+    socket.off("task-updated");
 
-    socket.on(
-      "task-created",
-
-      handleCreate,
-    );
-
-    socket.on(
-      "task-updated",
-
-      handleUpdate,
-    );
+    socket.on("task-created", reload);
+    socket.on("task-updated", reload);
 
     return () => {
-      socket.off(
-        "task-created",
-
-        handleCreate,
-      );
-
-      socket.off(
-        "task-updated",
-
-        handleUpdate,
-      );
+      socket.off("task-created", reload);
+      socket.off("task-updated", reload);
     };
-  }, [projectId, user]);
+  }, [projectId, sprintId, user]);
 
   const add = async (data: any) => {
-    const taskData = {
-      ...data,
-
-      projectId,
-
-      sprintId,
-
-      status: "TODO",
-    };
-
-    await createTask(taskData);
-
-    toast.success("Task created successfully 🚀");
-
-    setOpen(false);
-
-    load();
-  };
-
-  const changeStatus = async (
-    id: string,
-
-    status: string,
-  ) => {
     try {
-      await updateTaskStatus(
-        id,
+      await createTask({
+        ...data,
+        projectId,
+        sprintId,
+        status: "TODO",
+      });
 
-        status,
-      );
+      setOpen(false);
+
+      toast.success("Task created 🚀");
+    } catch (e) {
+      toast.error("Create failed");
+    }
+  };
+  const changeStatus = async (id: string, status: string) => {
+    const oldTasks = tasks;
+
+    setTasks((prev) =>
+      prev.map((t) =>
+        t._id === id
+          ? {
+              ...t,
+              status,
+            }
+          : t,
+      ),
+    );
+
+    try {
+      await updateTaskStatus(id, status);
 
       toast.success("Task status updated ⚡");
-    } finally {
-      load();
+    } catch (error) {
+      setTasks(oldTasks);
+
+      toast.error("Status update failed");
     }
   };
 
@@ -280,7 +272,11 @@ gap-6
 "
       >
         {columns.map((column) => {
-          const filtered = tasks.filter((t) => t.status === column.name);
+          const uniqueTasks = [
+            ...new Map(tasks.map((t) => [t._id, t])).values(),
+          ];
+
+          const filtered = uniqueTasks.filter((t) => t.status === column.name);
 
           return (
             <div

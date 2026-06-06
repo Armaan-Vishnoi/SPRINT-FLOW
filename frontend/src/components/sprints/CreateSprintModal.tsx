@@ -18,21 +18,31 @@ export default function CreateSprintModal({
   const submit = () => {
     if (!name.trim()) {
       toast.error("Sprint name is required 📝");
+      return;
+    }
 
+    if (!startDate) {
+      toast.error("Start date is required 📅");
+      return;
+    }
+
+    if (!endDate) {
+      toast.error("End date is required 📅");
+      return;
+    }
+
+    if (new Date(endDate) <= new Date(startDate)) {
+      toast.error("End date must be after start date ❌");
       return;
     }
 
     onCreate({
       name,
-
       goal,
-
       startDate,
-
       endDate,
     });
   };
-
   return (
     <div
       className="

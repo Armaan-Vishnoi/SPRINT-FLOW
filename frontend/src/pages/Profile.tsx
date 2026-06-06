@@ -11,13 +11,14 @@ import {
   updateEmailPreference,
 } from "../api/profileApi";
 import LoadingScreen from "../components/LoadingScreen";
+import { useAuth } from "../context/AuthContext";
 export default function Profile() {
   const [user, setUser] = useState<any>(null);
 
   const [image, setImage] = useState<any>(null);
 
   const [emailNotification, setEmailNotification] = useState(false);
-
+  const { updateUser } = useAuth();
   const [password, setPassword] = useState({
     currentPassword: "",
 
@@ -28,6 +29,8 @@ export default function Profile() {
     const res = await getProfile();
 
     setUser(res.user);
+
+    updateUser(res.user);
 
     setEmailNotification(Boolean(res.user.emailNotification));
   };
@@ -63,17 +66,17 @@ export default function Profile() {
 
     await uploadProfileImage(image);
 
-    toast.success("Profile image updated ✨");
+    await load();
 
-    load();
+    toast.success("Profile image updated ✨");
   };
 
   const saveProfile = async () => {
     await updateProfile(user);
 
-    toast.success("Profile updated 🚀");
+    await load();
 
-    load();
+    toast.success("Profile updated 🚀");
   };
 
   const savePassword = async () => {

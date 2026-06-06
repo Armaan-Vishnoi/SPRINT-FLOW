@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { getProfile, updateProfile, updatePassword, uploadProfileImage, deactivateAccount, updateEmailPreference, } from "../api/profileApi";
 import LoadingScreen from "../components/LoadingScreen";
+import { useAuth } from "../context/AuthContext";
 export default function Profile() {
     const [user, setUser] = useState(null);
     const [image, setImage] = useState(null);
     const [emailNotification, setEmailNotification] = useState(false);
+    const { updateUser } = useAuth();
     const [password, setPassword] = useState({
         currentPassword: "",
         newPassword: "",
@@ -14,6 +16,7 @@ export default function Profile() {
     const load = async () => {
         const res = await getProfile();
         setUser(res.user);
+        updateUser(res.user);
         setEmailNotification(Boolean(res.user.emailNotification));
     };
     useEffect(() => {
@@ -38,13 +41,13 @@ export default function Profile() {
             return;
         }
         await uploadProfileImage(image);
+        await load();
         toast.success("Profile image updated ✨");
-        load();
     };
     const saveProfile = async () => {
         await updateProfile(user);
+        await load();
         toast.success("Profile updated 🚀");
-        load();
     };
     const savePassword = async () => {
         await updatePassword(password);

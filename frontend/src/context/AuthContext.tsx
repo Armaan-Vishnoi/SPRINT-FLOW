@@ -1,5 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+
 import type { ReactNode } from "react";
+
+import { socket } from "../socket/socket";
+
+import { getProfile } from "../api/profileApi";
 
 interface AuthContextType {
   user: any;
@@ -7,14 +12,42 @@ interface AuthContextType {
   login: (user: any, token: string) => void;
 
   logout: () => void;
+
+  updateUser: (user: any) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<any>(
-    JSON.parse(localStorage.getItem("user") || "null"),
-  );
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) return;
+
+      try {
+        const res = await getProfile();
+
+        setUser(res.user);
+
+        localStorage.setItem("user", JSON.stringify(res.user));
+      } catch (error) {
+        console.log("AUTH USER LOAD ERROR", error);
+
+        localStorage.clear();
+      }
+    };
+
+    loadUser();
+  }, []);
+
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
+  }, []);
 
   const login = (user: any, token: string) => {
     localStorage.setItem("token", token);
@@ -24,10 +57,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(user);
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
+  const updateUser = (newUser: any) => {
+    setUser(newUser);
 
-    localStorage.removeItem("user");
+    localStorage.setItem("user", JSON.stringify(newUser));
+  };
+
+  const logout = () => {
+    localStorage.clear();
 
     setUser(null);
   };
@@ -40,6 +77,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
 
         logout,
+
+        updateUser,
       }}
     >
       {children}

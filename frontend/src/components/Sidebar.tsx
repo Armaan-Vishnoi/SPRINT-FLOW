@@ -2,63 +2,48 @@ import { useEffect, useState } from "react";
 
 import { NavLink } from "react-router-dom";
 
-import { getProfile } from "../api/profileApi";
-
 import { useNavigate } from "react-router-dom";
 
 import { getNotifications } from "../api/notificationApi";
 
 import { socket } from "../socket/socket";
 
+import { useAuth } from "../context/AuthContext";
+
 export default function Sidebar() {
-  const [user, setUser] = useState<any>(null);
+  const { user } = useAuth();
 
   const [unread, setUnread] = useState(0);
 
   const navigate = useNavigate();
 
   const loadNotifications = async () => {
-    const res = await getNotifications();
+    try {
+      const res = await getNotifications();
 
-    const count = res.notifications.filter((n: any) => !n.isRead).length;
+      const count = res.notifications.filter((n: any) => !n.isRead).length;
 
-    setUnread(count);
+      setUnread(count);
+    } catch (error) {
+      console.log("Notification error", error);
+    }
   };
 
   useEffect(() => {
-    window.addEventListener(
-      "notifications-updated",
-
-      loadNotifications,
-    );
-
-    getProfile()
-      .then((res) => {
-        setUser(res.user);
-      })
-
-      .catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    getProfile().then((res) => {
-      setUser(res.user);
-    });
-
     loadNotifications();
 
-    socket.on(
-      "notification",
+    const update = (data: any) => {
+      if (data.userId === user?._id) {
+        setUnread((old) => old + 1);
+      }
+    };
 
-      () => {
-        loadNotifications();
-      },
-    );
+    socket.on("notification", update);
 
     return () => {
-      socket.off("notification");
+      socket.off("notification", update);
     };
-  }, []);
+  }, [user]);
 
   const menu = [
     {
@@ -171,7 +156,11 @@ relative
             >
               <img
                 src={
-                  user?.profilePicture ? user.profilePicture : "/default.png"
+                  user?.profilePicture
+                    ? user.profilePicture.startsWith("http")
+                      ? user.profilePicture
+                      : `http://localhost:5000/${user.profilePicture}`
+                    : "/default.png"
                 }
                 onError={(e: any) => {
                   e.currentTarget.src = "/default.png";

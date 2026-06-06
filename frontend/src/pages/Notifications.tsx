@@ -41,7 +41,17 @@ export default function Notifications() {
 
     loadProfile();
   }, []);
+  useEffect(() => {
+    const update = () => {
+      load();
+    };
 
+    socket.on("notification", update);
+
+    return () => {
+      socket.off("notification", update);
+    };
+  }, []);
   const readOne = async (id: string) => {
     await markRead(id);
 
@@ -163,8 +173,6 @@ flex-wrap
 gap-3
 "
           >
-            
-
             <button
               onClick={readAll}
               className="

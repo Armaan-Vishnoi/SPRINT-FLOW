@@ -27,26 +27,26 @@ export default function CreateTaskModal({
     tasks,
   );
 
-  const submit = () => {
+  const [creating, setCreating] = useState(false);
+  const submit = async () => {
+    if (creating) return;
+
     if (!form.title) {
       toast.error("Task title is required 📝");
-
       return;
     }
 
     if (!form.assignee) {
       toast.error("Please assign a team member 👤");
-
       return;
     }
 
-    onCreate({
+    setCreating(true);
+
+    await onCreate({
       title: form.title,
-
       description: form.description,
-
       assignee: form.assignee,
-
       dependencies: form.dependency ? [form.dependency] : [],
     });
   };
@@ -313,6 +313,7 @@ mt-8
 "
         >
           <button
+            disabled={creating}
             onClick={submit}
             className="
 py-4
